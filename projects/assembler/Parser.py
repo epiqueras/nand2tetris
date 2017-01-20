@@ -1,20 +1,17 @@
-def removeSpaceAndComments(lines):
-    newLines = []
-    for line in lines:
-        if line == '' or line.isspace():
-            continue
-        elif line[0:2] == '//':
-            continue
+def removeSpaceAndComments(line):
+    if line == '' or line.isspace():
+        return False
+    elif line[0:2] == '//':
+        return False
+    else:
+        if '/' in line:
+            return line[0:line.index('/')].replace(' ', '') + '\n'
         else:
-            if '/' in line:
-                newLines.append(line[0:line.index('/')].replace(' ', ''))
-            else:
-                newLines.append(line.replace(' ', ''))
-    return newLines
+            return line.replace(' ', '')
 
 
 def instruction(line):
-    cleanLine = line.replace('\r\n', '')
+    cleanLine = line.replace('\n', '').replace('\r', '')
     if cleanLine[0] == '@':
         return {'type': 'A', 'address': cleanLine[1:]}
     else:

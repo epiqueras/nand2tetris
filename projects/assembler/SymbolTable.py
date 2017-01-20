@@ -25,16 +25,15 @@ table = {
 }
 
 nextVariableAddress = 16
+lineCounter = 0
 
 
-def addLabels(lines):
-    newLines = []
-    lineCounter = 0
-    for line in lines:
-        if line[0] == '(':
-            label = line.split(')')[0][1:]
-            table[label] = '{0:015b}'.format(lineCounter)
-        else:
-            newLines.append(line)
-            lineCounter += 1
-    return newLines
+def addLabel(line):
+    if line[0] == '(':
+        label = line.split(')')[0][1:]
+        table[label] = '{0:015b}'.format(lineCounter)
+        return False
+    else:
+        global lineCounter
+        lineCounter += 1
+        return line
