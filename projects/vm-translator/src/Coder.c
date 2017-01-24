@@ -217,21 +217,18 @@ char * __code_push_static(char *instruction[], char *filename) {
   char *file_name;
   char *tmp_str = malloc((strlen(filename) + 1) * sizeof(char));
   if (tmp_str == NULL) { printf("Error allocating memory.\n"); exit(1); }
+  char *org_tmp_str = tmp_str;
 
   strcpy(tmp_str, filename);
   while ((file_name = strsep(&tmp_str, "/")) && tmp_str != NULL);
-  free(tmp_str);
-
-  char *tmp2_str = malloc((strlen(filename) + 1) * sizeof(char));
-  if (tmp2_str == NULL) { printf("Error allocating memory.\n"); exit(1); }
-  strcpy(tmp2_str, file_name);
-
-  file_name = strsep(&tmp2_str, ".");
+  
+  file_name = strsep(&file_name, ".");
 
   char *var_name = malloc(sizeof(char) * 100);
   if (var_name == NULL) { printf("Error allocating memory.\n"); exit(1); }
   sprintf(var_name, "%s.%s", file_name, instruction[2]);
-  free(file_name);
+  free(org_tmp_str);
+
   char *code = malloc(sizeof(char) * 60 );
   if (code == NULL) { printf("Error allocating memory.\n"); exit(1); }
   sprintf(code,
@@ -366,21 +363,18 @@ char * __code_pop_static(char *instruction[], char *filename) {
   char *file_name;
   char *tmp_str = malloc((strlen(filename) + 1) * sizeof(char));
   if (tmp_str == NULL) { printf("Error allocating memory.\n"); exit(1); }
+  char *org_tmp_str = tmp_str;
 
   strcpy(tmp_str, filename);
   while ((file_name = strsep(&tmp_str, "/")) && tmp_str != NULL);
-  free(tmp_str);
-
-  char *tmp2_str = malloc((strlen(filename) + 1) * sizeof(char));
-  if (tmp2_str == NULL) { printf("Error allocating memory.\n"); exit(1); }
-  strcpy(tmp2_str, file_name);
-
-  file_name = strsep(&tmp2_str, ".");
+  
+  file_name = strsep(&file_name, ".");
 
   char *var_name = malloc(sizeof(char) * 100);
   if (var_name == NULL) { printf("Error allocating memory.\n"); exit(1); }
   sprintf(var_name, "%s.%s", file_name, instruction[2]);
-  free(file_name);
+  free(org_tmp_str);
+
   char *code = malloc(sizeof(char) * 50 );
   if (code == NULL) { printf("Error allocating memory.\n"); exit(1); }
   sprintf(code,
