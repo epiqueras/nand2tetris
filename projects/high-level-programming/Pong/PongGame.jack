@@ -1,0 +1,50 @@
+class PongGame {
+  field Paddles paddles;
+  field Ball ball;
+  field int direction;
+
+  constructor PongGame new() {
+    let paddles = Paddles.new();
+    let ball = Ball.new();
+    return this;
+  }
+
+  method void dispose() {
+    do paddles.dispose();
+    do ball.dispose();
+    do Memory.deAlloc(this);
+    return;
+  }
+
+  method void renderGame() {
+    if (direction = 1) { do paddles.moveUp(); }
+    if (direction = -1) { do paddles.moveDown(); }
+    do ball.checkCollision(paddles);
+    do ball.move();
+    do Sys.wait(10);
+    return;
+  }
+
+  method void run() {
+    var char pressedKey;
+    var boolean exit;
+    let exit = false;
+
+    while (~exit) {
+      while (pressedKey = 0) {
+        let pressedKey = Keyboard.keyPressed();
+        do renderGame();
+      }
+
+      if (pressedKey = 81)  { let exit = true; }
+      if (pressedKey = 131) { let direction = 1; }
+      if (pressedKey = 133) { let direction = -1; }
+
+      while (~(pressedKey = 0)) {
+        let pressedKey = Keyboard.keyPressed();
+        do renderGame();
+      }
+    }
+    return;
+  }
+}

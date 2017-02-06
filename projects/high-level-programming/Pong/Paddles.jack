@@ -1,0 +1,53 @@
+class Paddles {
+  field int leftX;
+  field int rightX;
+  field int y;
+  field int width;
+  field int height;
+
+  constructor Paddles new() {
+    let leftX = 0;
+    let rightX = 501;
+    let width = 10;
+    let height = 50;
+    do Screen.setColor(true);
+    do Screen.drawRectangle(leftX, y, leftX + width, y + height);
+    do Screen.drawRectangle(rightX, y, rightX + width, y + height);
+    return this;
+  }
+
+  method void dispose() {
+    do Memory.deAlloc(this);
+    return;
+  }
+
+  method int getY() {
+    return y;
+  }
+
+  method void moveUp() {
+    if (y > 1) {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(leftX, (y + height) - 1, leftX + width, y + height);
+      do Screen.drawRectangle(rightX, (y + height) - 1, rightX + width, y + height);
+      let y = y - 2;
+      do Screen.setColor(true);
+      do Screen.drawRectangle(leftX, y, leftX + width, y + 1);
+      do Screen.drawRectangle(rightX, y, rightX + width, y + 1);
+    }
+    return;
+  }
+
+  method void moveDown() {
+    if ((y + height) < 254) {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(leftX, y, leftX + width, y + 1);
+      do Screen.drawRectangle(rightX, y, rightX + width, y + 1);
+      let y = y + 2;
+      do Screen.setColor(true);
+      do Screen.drawRectangle(leftX, (y + height) - 1, leftX + width, y + height);
+      do Screen.drawRectangle(rightX, (y + height) - 1, rightX + width, y + height);
+    }
+    return;
+  }
+}

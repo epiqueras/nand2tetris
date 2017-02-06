@@ -1,0 +1,114 @@
+class Ball {
+  field int x;
+  field int y;
+  field int xDir;
+  field int yDir;
+  field int size;
+
+  constructor Ball new() {
+    let x = 252;
+    let y = 124;
+    let xDir = -1;
+    let yDir = 0;
+    let size = 8;
+    do Screen.setColor(true);
+    do Screen.drawRectangle(x, y, x + size, y + size);
+    return this;
+  }
+
+  method void dispose() {
+    do Memory.deAlloc(this);
+    return;
+  }
+
+  method void moveUp() {
+    if (y > 1) {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
+      let y = y - 2;
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, y, x + size, y + 1);
+    }
+    return;
+  }
+
+  method void moveDown() {
+    if ((y + size) < 254) {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y, x + size, y + 1);
+      let y = y + 2;
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
+    }
+    return;
+  }
+
+  method void moveRight() {
+    if ((x + size) < 510) {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y, x + 1, y + size);
+      let x = x + 2;
+      do Screen.setColor(true);
+      do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+    }
+    return;
+  }
+
+  method void moveLeft() {
+    if (x > 1) {
+      do Screen.setColor(false);
+      do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+      let x = x - 2;
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, y, x + 1, y + size);
+    }
+    return;
+  }
+
+  method void move() {
+    if (yDir = 1) { do moveDown(); }
+    if (yDir = -1) { do moveUp(); }
+    if (xDir = 1) { do moveRight(); }
+    if (xDir = -1) { do moveLeft(); }
+    return;
+  }
+
+  method void checkCollision(Paddles paddles) {
+    var int paddlesY;
+    let paddlesY = paddles.getY();
+    if ((y > (paddlesY - 1)) & (y < (paddlesY + 51))) {
+      if ((x < 11)) {
+        let xDir = 1;
+        if (y < 128) {
+          let yDir = 1;
+        } else {
+          let yDir = -1;
+        }
+      }
+      if ((x > 492)) {
+        let xDir = -1;
+        if (y < 128) {
+          let yDir = 1;
+        } else {
+          let yDir = -1;
+        }
+      }
+    }
+    if (y < 1) {
+      let yDir = 1;
+    }
+    if (y > 245) {
+      let yDir = -1;
+    }
+    if ((x < 1) | (x > 501)) {
+      do Screen.setColor(false);
+      do Screen.drawRectangle(x, y, x + size, y + size);
+      let x = 252;
+      let y = 124;
+      do Screen.setColor(true);
+      do Screen.drawRectangle(x, y, x + size, y + size);
+      do Sys.wait(1000);
+    }
+    return;
+  }
+}
