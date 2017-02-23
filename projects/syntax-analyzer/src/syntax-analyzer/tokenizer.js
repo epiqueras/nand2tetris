@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 import fs from 'fs';
 
-import testRule from './utils';
+import { testRule } from './utils';
 
 const currentChar = Buffer.from([0x20]);
 

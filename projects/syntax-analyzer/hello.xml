@@ -1,20 +1,22 @@
-<stringConstant>abcd</stringConstant>
-<symbol>(</symbol>
-<stringConstant>a</stringConstant>
-<symbol>)</symbol>
-<symbol>(</symbol>
-<stringConstant>b</stringConstant>
-<symbol>)</symbol>
-<symbol>(</symbol>
-<stringConstant>wadaw</stringConstant>
-<symbol>)</symbol>
-<stringConstant>awd</stringConstant>
-<symbol>)</symbol>
-<symbol>)</symbol>
-<symbol>)</symbol>
-<symbol>)</symbol>
-<symbol>}</symbol>
-<symbol>{</symbol>
-<symbol>[</symbol>
-<symbol>]</symbol>
-<symbol>}</symbol>
+<tokens>
+  <stringConstant>abcd</stringConstant>
+  <symbol>(</symbol>
+  <stringConstant>a</stringConstant>
+  <symbol>)</symbol>
+  <symbol>(</symbol>
+  <stringConstant>b</stringConstant>
+  <symbol>)</symbol>
+  <symbol>(</symbol>
+  <stringConstant>wadaw</stringConstant>
+  <symbol>)</symbol>
+  <stringConstant>awd</stringConstant>
+  <symbol>)</symbol>
+  <symbol>)</symbol>
+  <symbol>)</symbol>
+  <symbol>)</symbol>
+  <symbol>}</symbol>
+  <symbol>{</symbol>
+  <symbol>[</symbol>
+  <symbol>]</symbol>
+  <symbol>}</symbol>
+</tokens>

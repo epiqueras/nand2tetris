@@ -11,8 +11,6 @@ var _fs2 = _interopRequireDefault(_fs);
 
 var _utils = require('./utils');
 
-var _utils2 = _interopRequireDefault(_utils);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* eslint-disable no-useless-escape */
@@ -27,14 +25,14 @@ function nextToken(input, lexicalElements) {
 
   while (/\s/.test(currentChar.toString()) && nextChar(input)) {
     token = currentChar.toString();
-  }if ((0, _utils2.default)(currentChar.toString(), lexicalElements.symbol)) {
+  }if ((0, _utils.testRule)(currentChar.toString(), lexicalElements.symbol)) {
     token = currentChar.toString();
     currentChar.write(' ');
     return token;
   }
 
   var bytesRead = nextChar(input);
-  while (bytesRead && !/\s/.test(currentChar.toString()) && !(0, _utils2.default)(currentChar.toString(), lexicalElements.symbol)) {
+  while (bytesRead && !/\s/.test(currentChar.toString()) && !(0, _utils.testRule)(currentChar.toString(), lexicalElements.symbol)) {
     token += currentChar.toString();
     bytesRead = nextChar(input);
   }
@@ -44,7 +42,7 @@ function nextToken(input, lexicalElements) {
 
 function categorize(token, lexicalElements) {
   var matched = Object.keys(lexicalElements).find(function (element) {
-    return (0, _utils2.default)(token, lexicalElements[element]);
+    return (0, _utils.testRule)(token, lexicalElements[element]);
   });
   if (matched) return matched;
   throw new Error('Invalid token.');
