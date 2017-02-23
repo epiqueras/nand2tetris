@@ -1,6 +1,7 @@
-tools
-projects/00
-projects/11
-projects/12
-projects/13
-projects/demo
+/tools/
+/projects/00/
+/projects/11/
+/projects/12/
+/projects/13/
+/projects/demo/
+/projects/syntax-analyzer/src/node_modules/
