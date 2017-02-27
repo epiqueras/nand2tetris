@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 exports.testRule = testRule;
+exports.isQuote = isQuote;
 exports.openTag = openTag;
 exports.closeTag = closeTag;
 exports.writeWithTags = writeWithTags;
@@ -33,6 +34,10 @@ function testRule(token, test) {
   }
 }
 
+function isQuote(char) {
+  return char === '"' || char === "'";
+}
+
 function getWhitespace(indentation) {
   return indentation ? '  '.repeat(indentation) : '';
 }
@@ -46,5 +51,19 @@ function closeTag(output, tag, indentation) {
 }
 
 function writeWithTags(output, content, tag, indentation) {
-  _fs2.default.writeSync(output, getWhitespace(indentation) + '<' + tag + '>' + content + '</' + tag + '>\n');
+  var strToWrite = content;
+  switch (strToWrite) {
+    case '<':
+      strToWrite = '&lt;';
+      break;
+    case '>':
+      strToWrite = '&gt;';
+      break;
+    case '&':
+      strToWrite = '&amp;';
+      break;
+    default:
+      break;
+  }
+  _fs2.default.writeSync(output, getWhitespace(indentation) + '<' + tag + '>' + strToWrite + '</' + tag + '>\n');
 }

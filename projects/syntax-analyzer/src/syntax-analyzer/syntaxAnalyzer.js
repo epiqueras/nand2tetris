@@ -7,6 +7,7 @@ import compile from './compiler';
 function analyze(filePath, grammar) {
   let sourceFiles;
 
+  // Get source file or source files in directory
   if (filePath.slice(filePath.lastIndexOf('.')) === '.jack') {
     sourceFiles = [filePath];
   } else {
@@ -16,6 +17,7 @@ function analyze(filePath, grammar) {
 
   console.log(`Compiling: ${sourceFiles}`);
 
+  // Compile each source file
   sourceFiles.forEach((sourceFile) => {
     const input = fs.openSync(sourceFile, 'r');
     const output = fs.openSync(`${sourceFile.slice(0, sourceFile.lastIndexOf('.'))}.xml`, 'w');
@@ -63,8 +65,8 @@ const grammar = {
       'boolean', 'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return'],
     symbol: /{|}|\(|\)|\[|\]|\.|,|;|\+|-|\*|\/|&|\||<|>|=|~/,
     integerConstant: n => Number(n) >= 0 && Number(n) <= 32767,
-    stringConstant: s => !s.includes('"') && !s.includes('\n'),
     identifier: /^\D\w*/,
+    stringConstant: s => !s.includes('"') && !s.includes('\n'),
   },
 };
 

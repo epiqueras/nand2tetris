@@ -1,9 +1,11 @@
 /* eslint-disable no-useless-escape */
 import fs from 'fs';
+import os from 'os';
 
-import { testRule } from './utils';
+import { testRule, isQuote } from './utils';
 
 const currentChar = Buffer.from([0x20]);
+let isLiteral = false;
 
 function nextChar(input) {
   return fs.readSync(input, currentChar, 0, 1);
@@ -12,14 +14,31 @@ function nextChar(input) {
 function nextToken(input, lexicalElements) {
   let token = '';
 
-  while (/\s/.test(currentChar.toString()) && nextChar(input)) token = currentChar.toString();
+  // Skip over whitespace
+  while (currentChar.toString() !== os.EOL && /\s/.test(currentChar.toString()) && nextChar(input)) token = currentChar.toString();
 
-  if (testRule(currentChar.toString(), lexicalElements.symbol)) {
+  // Stop and return symbols
+  if (testRule(currentChar.toString(), lexicalElements.symbol)
+    || currentChar.toString() === os.EOL) {
     token = currentChar.toString();
     currentChar.write(' ');
     return token;
   }
 
+  // Different rules for string literals
+  if (isQuote(currentChar.toString())) {
+    isLiteral = currentChar.toString();
+    token = '';
+    let bytesRead = nextChar(input);
+    while (bytesRead && currentChar.toString() !== isLiteral) {
+      token += currentChar.toString();
+      bytesRead = nextChar(input);
+    }
+    currentChar.write(' ');
+    return token;
+  }
+
+  // Concatenate other characters
   let bytesRead = nextChar(input);
   while (bytesRead && !/\s/.test(currentChar.toString()) && !testRule(currentChar.toString(), lexicalElements.symbol)) {
     token += currentChar.toString();
@@ -30,6 +49,15 @@ function nextToken(input, lexicalElements) {
 }
 
 function categorize(token, lexicalElements) {
+  if (isLiteral) {
+    isLiteral = false;
+    if (lexicalElements.stringConstant) {
+      if (testRule(token, lexicalElements.stringConstant)) return 'stringConstant';
+      throw new Error('Invalid string constant.');
+    } else return 'stringConstant';
+  }
+
+  if (token === os.EOL) return 'eol';
   const matched = Object.keys(lexicalElements)
     .find(element => testRule(token, lexicalElements[element]));
   if (matched) return matched;

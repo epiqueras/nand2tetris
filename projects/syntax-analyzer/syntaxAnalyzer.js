@@ -21,6 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function analyze(filePath, grammar) {
   var sourceFiles = void 0;
 
+  // Get source file or source files in directory
   if (filePath.slice(filePath.lastIndexOf('.')) === '.jack') {
     sourceFiles = [filePath];
   } else {
@@ -33,6 +34,7 @@ function analyze(filePath, grammar) {
 
   console.log('Compiling: ' + sourceFiles);
 
+  // Compile each source file
   sourceFiles.forEach(function (sourceFile) {
     var input = _fs2.default.openSync(sourceFile, 'r');
     var output = _fs2.default.openSync(sourceFile.slice(0, sourceFile.lastIndexOf('.')) + '.xml', 'w');
@@ -81,10 +83,10 @@ var grammar = {
     integerConstant: function integerConstant(n) {
       return Number(n) >= 0 && Number(n) <= 32767;
     },
+    identifier: /^\D\w*/,
     stringConstant: function stringConstant(s) {
       return !s.includes('"') && !s.includes('\n');
-    },
-    identifier: /^\D\w*/
+    }
   }
 };
 

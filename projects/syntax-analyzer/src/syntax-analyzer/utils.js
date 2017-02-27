@@ -14,6 +14,10 @@ export function testRule(token, test) {
   }
 }
 
+export function isQuote(char) {
+  return char === '"' || char === "'";
+}
+
 function getWhitespace(indentation) {
   return indentation ? '  '.repeat(indentation) : '';
 }
@@ -27,5 +31,19 @@ export function closeTag(output, tag, indentation) {
 }
 
 export function writeWithTags(output, content, tag, indentation) {
-  fs.writeSync(output, `${getWhitespace(indentation)}<${tag}>${content}</${tag}>\n`);
+  let strToWrite = content;
+  switch (strToWrite) {
+    case '<':
+      strToWrite = '&lt;';
+      break;
+    case '>':
+      strToWrite = '&gt;';
+      break;
+    case '&':
+      strToWrite = '&amp;';
+      break;
+    default:
+      break;
+  }
+  fs.writeSync(output, `${getWhitespace(indentation)}<${tag}>${strToWrite}</${tag}>\n`);
 }
