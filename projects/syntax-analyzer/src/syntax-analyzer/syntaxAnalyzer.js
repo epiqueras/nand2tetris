@@ -2,11 +2,10 @@ import fs from 'fs';
 import path from 'path';
 
 import advance from './tokenizer';
-import compile, { parseStructure } from './compiler';
+import compile from './compiler';
 
-function analyze(filePath, grammar) {
+function analyze(filePath, lexicalElements, grammar) {
   let sourceFiles;
-  const parsedGrammar = { ...grammar, structure: parseStructure(grammar.structure) };
 
   // Get source file or source files in directory
   if (filePath.slice(filePath.lastIndexOf('.')) === '.jack') {
@@ -23,51 +22,22 @@ function analyze(filePath, grammar) {
     const input = fs.openSync(sourceFile, 'r');
     const output = fs.openSync(`${sourceFile.slice(0, sourceFile.lastIndexOf('.'))}.xml`, 'w');
 
-    let token = advance(input, parsedGrammar.lexicalElements);
+    let token = advance(input, lexicalElements);
     while (token) {
-      compile(output, token, parsedGrammar);
-      token = advance(input, parsedGrammar.lexicalElements);
+      compile(output, token, grammar);
+      token = advance(input, lexicalElements);
     }
-    compile(output, token);
+    compile(output, token, grammar);
   });
 }
 
-const grammar = {
-  structure: {
-    statement: 'letStatement|ifStatement|whileStatement|doStatement|returnStatement|classDec',
-    letStatement: ['let', 'varName', '[!expression!]?', '=', 'expression', ';'],
-    ifStatement: ['if', '(', 'expression', ')', '{', 'statements', '}', 'else!{!statements!}?'],
-    whileStatement: ['while', '(', 'expression', ')', '{', 'statements', '}'],
-    doStatement: ['do', 'subroutineCall', ';'],
-    returnStatement: ['return', 'expression?', ';'],
-    classDec: ['class', 'className', '{', 'classVarDec*', 'subRoutineDec*', '}'],
-    classVarDec: ['static|field', 'type', 'varName', ',!varName*', ';'],
-    type: 'int|char|boolean|className',
-    subroutineDec: ['constructor|function|method', 'void|type', 'subroutineName', '(', 'parameterList?', ')', 'subroutineBody'],
-    parameterList: ['type', 'varName', ',!type!varName*'],
-    subroutineBody: ['{', 'varDec*', 'statements', '}'],
-    varDec: ['var', 'type', 'varName', ',!varName*', ';'],
-    className: 'identifier',
-    subroutineName: 'identifier',
-    varName: 'identifier',
-    expression: ['term', 'op!term*'],
-    term: 'integerConstant|stringConstant|keywordConstant|varName|varName![!expression!]|subroutineCall|(!expression!)|unaryOp!term',
-    subroutineCall: 'functionCall|methodCall',
-    functionCall: ['subroutineName', '(', 'expressionList?', ')'],
-    methodCall: ['className|varName', '.', 'subroutineName', '(', 'expressionList?', ')'],
-    expressionList: ['expression', ',!expression*'],
-    op: '+|-|*|/|&|||<|>|=',
-    unaryOp: '-|~',
-    keywordConstant: 'true|false|null|this',
-  }, // Looks correct
-  lexicalElements: {
-    keyword: ['class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char',
-      'boolean', 'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return'],
-    symbol: /{|}|\(|\)|\[|\]|\.|,|;|\+|-|\*|\/|&|\||<|>|=|~/,
-    integerConstant: n => Number(n) >= 0 && Number(n) <= 32767,
-    identifier: /^\D\w*/,
-    stringConstant: s => !s.includes('"') && !s.includes('\n'),
-  },
+const lexicalElements = {
+  keyword: ['class', 'constructor', 'function', 'method', 'field', 'static', 'var', 'int', 'char',
+    'boolean', 'void', 'true', 'false', 'null', 'this', 'let', 'do', 'if', 'else', 'while', 'return'],
+  symbol: /{|}|\(|\)|\[|\]|\.|,|;|\+|-|\*|\/|&|\||<|>|=|~/,
+  integerConstant: n => Number(n) >= 0 && Number(n) <= 32767,
+  identifier: /^\D\w*/,
+  stringConstant: s => !s.includes('"') && !s.includes('\n'),
 };
 
-analyze(process.argv[2], grammar);
+analyze(process.argv[2], lexicalElements, false);
