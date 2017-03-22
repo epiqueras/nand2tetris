@@ -48,6 +48,7 @@ function nextToken(input, lexicalElements) {
   return token.trim();
 }
 
+// Assigns token to a lexical element
 function categorize(token, lexicalElements) {
   if (isLiteral) {
     isLiteral = false;
@@ -64,6 +65,7 @@ function categorize(token, lexicalElements) {
   throw new Error('Invalid token.');
 }
 
+// Advances compilation to the next token
 export default function advance(input, lexicalElements) {
   const token = nextToken(input, lexicalElements);
   return token ? { content: token, tag: categorize(token, lexicalElements) } : token;

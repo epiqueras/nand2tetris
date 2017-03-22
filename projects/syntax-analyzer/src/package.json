@@ -4,7 +4,7 @@
   "description": "The nand2tetris Syntax Analyzer.",
   "main": "SyntaxAnalyzer.js",
   "scripts": {
-    "start": "babel -w syntax-analyzer -d .."
+    "start": "babel -s inline -w syntax-analyzer -d .."
   },
   "author": "epiqueras",
   "license": "MIT",
